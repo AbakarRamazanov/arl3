@@ -1,13 +1,13 @@
 package main
 
 import (
-	"os"
-	"fmt"
-	"time"
-	"strconv"
-	"math/rand"
-	"encoding/csv"
 	"bufio"
+	"encoding/csv"
+	"fmt"
+	"math/rand"
+	"os"
+	"strconv"
+	"time"
 )
 
 var numbers = []string{
@@ -15,22 +15,19 @@ var numbers = []string{
 	"five", "six", "seven", "eight", "nine"}
 
 var endElementDigitInStringSlice = 900
-var numberOfIterations = 999999999;
-var currentNumber int;
-var numberOfPixel = 784;
-var threshold = 1;
-var weights [784]int;
+var numberOfIterations = 5000000//9999999//
+var currentNumber int
+var numberOfPixel = 784
+var threshold = 5000
+var weights [784]int
 var digitInStringSlice [][]string
 
 func getDigitInStringSlice(fileName string) []string {
 	csvFile, _ := os.Open(fileName)
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	line, _ := reader.Read()
-	for i := 0; i < 800; i++ {
-		return line
-	}
 	csvFile.Close()
-	return line
+	return line[:endElementDigitInStringSlice]
 }
 
 func education() {
@@ -43,11 +40,11 @@ func education() {
 		index = rand.Intn(endElementDigitInStringSlice)
 		flag = discrimination(digit, index)
 		if digit == currentNumber {
-			if (!flag) {
-				editweights(digitInStringSlice[digit][index], 1)
+			if !flag {
+				editweights(digitInStringSlice[digit][index], 20)
 			}
 		} else {
-			if (flag) {
+			if flag {
 				editweights(digitInStringSlice[digit][index], -1)
 			}
 		}
@@ -59,8 +56,10 @@ var o int
 
 func discrimination(digit int, index int) bool {
 	sum := 0
-	for i := 0; i < numberOfPixel; i++{
-		if digitInStringSlice[digit][index][i] == '1'{
+	digit = 9
+	for i := 0; i < numberOfPixel; i++ {
+		//fmt.Println("i = " + strconv.Itoa(i))
+		if digitInStringSlice[digit][index][i] == '1' {
 			sum += weights[i]
 		}
 	}
@@ -72,9 +71,9 @@ func discrimination(digit int, index int) bool {
 	return sum >= threshold
 }
 
-func editweights(digit string, cof int)  {
+func editweights(digit string, cof int) {
 	for i := 0; i < numberOfPixel; i++ {
-		if(digit[i] == '1') {
+		if digit[i] == '1' {
 			weights[i] += cof
 		}
 	}
@@ -82,20 +81,41 @@ func editweights(digit string, cof int)  {
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
+	currentNumber, _ = strconv.Atoi(os.Args[1])
 	digitInStringSlice = make([][]string, 10)
+	//d := 0
+	//k := getDigitInStringSlice("CSVs" + string(os.PathSeparator) + strconv.Itoa(1) + ".csv")
+	//for i := 0; i < 10; i++ {
+	//	l := rand.Intn(800)
+	//	p := 0
+	//	for j := 0; j < 784; j++ {
+	//		if(k[l][j] == '1') {
+	//			p++
+	//		}
+	//	}
+	//	d += p
+	//	fmt.Print(strconv.Itoa(i) + ": " )
+	//	fmt.Print("l = " + strconv.Itoa(l))
+	//	fmt.Println(";\tp = " + strconv.Itoa(p))
+	//}
+	//fmt.Println("d/10 = " + strconv.Itoa(d/10))
+	//os.Exit(0)
 	for i := 0; i < 10; i++ {
 		digitInStringSlice[i] = getDigitInStringSlice("CSVs" + string(os.PathSeparator) + strconv.Itoa(i) + ".csv")
 	}
-	currentNumber, _ = strconv.Atoi(os.Args[1])
 	education()
 
 	index := 0
 	for i := 0; i < 10; i++ {
 		index = rand.Intn(100) + 800
-		if discrimination(currentNumber, index) {
-			fmt.Print("YES\t")
+		fmt.Print(i)
+		//fmt.Print("\t")
+		//fmt.Print(index)
+		fmt.Print("\t")
+		if discrimination(i, index) {
+			fmt.Println("YES")
 		} else {
-			fmt.Print("NO\t")
+			fmt.Println("NO")
 		}
 	}
 
@@ -105,10 +125,10 @@ func main() {
 	// 		fmt.Println(weights[index])
 	// 	}
 	// }
-	// fmt.Println()
-	// for index := 0; index < 784; index++ {
-	// 	if weights[index] > 0{
-	// 		fmt.Println(weights[index])
-	// 	}
-	// }
+	//fmt.Println()
+	//for index := 0; index < 784; index++ {
+	//	if weights[index] > 0{
+	//		fmt.Println(weights[index])
+	//	}
+	//}
 }
