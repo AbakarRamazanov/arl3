@@ -15,7 +15,7 @@ var numbers = []string{
 	"five", "six", "seven", "eight", "nine"}
 
 var endElementDigitInStringSlice = 900
-var numberOfIterations = 5000000//9999999//
+var numberOfIterations = 5000000 //9999999//
 var currentNumber int
 var numberOfPixel = 784
 var threshold = 5000
@@ -45,7 +45,7 @@ func education() {
 			}
 		} else {
 			if flag {
-				editweights(digitInStringSlice[digit][index], -1)
+				editweights(digitInStringSlice[digit][index], -5)
 			}
 		}
 	}
@@ -56,7 +56,6 @@ var o int
 
 func discrimination(digit int, index int) bool {
 	sum := 0
-	digit = 9
 	for i := 0; i < numberOfPixel; i++ {
 		//fmt.Println("i = " + strconv.Itoa(i))
 		if digitInStringSlice[digit][index][i] == '1' {
